@@ -24,11 +24,13 @@ int main(int argc, char const *argv[])
         feed = std::make_unique<FileFeed>(file);
     }
 
+    feed->showSliders();
+
     while (true)
     {
         cv::Mat img = feed->getFeed();
-        img = feed->processImg(img);
-        cv::imshow("feed", img);
+        cv::imshow("Feed", img);
+        img = feed->processImg(img, true);
         cv::waitKey(1);
     }
     

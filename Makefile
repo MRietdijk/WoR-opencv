@@ -1,4 +1,4 @@
-CFLAGS= `pkg-config --cflags opencv4`
+CFLAGS= -Wall `pkg-config --cflags opencv4`
 LIBS= `pkg-config --libs opencv4`
 
 O_FILES= CameraFeed.o FileFeed.o Feed.o
