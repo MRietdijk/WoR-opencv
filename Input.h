@@ -11,6 +11,7 @@ public:
     ~Input();
     void handleInput();
 private:
+    std::unique_ptr<Feed> chooseFeed();
     void handleFile();
     void handleCommand();
     static void readConsole(std::string& command, bool& quit);
