@@ -3,6 +3,7 @@
 
 #include "Command.h"
 #include <memory>
+#include "Feed.h"
 
 class Input
 {

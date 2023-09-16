@@ -40,6 +40,7 @@ void Input::handleCommand() {
 
 
     std::thread consoleThread(readConsole, std::ref(command), std::ref(quit));
+    feed->showSliders();
 
     while (!quit)
     {
@@ -54,8 +55,13 @@ void Input::handleCommand() {
 
         Command command(colorStr, shapeStr);
 
+        cv::Mat img = feed->getFeed();
+        cv::imshow("Feed", img);
+        img = feed->processImg(img, true);
+        cv::waitKey(1);
 
     }
+    cv::destroyAllWindows();
 
     consoleThread.join();
 }
@@ -87,4 +93,6 @@ std::unique_ptr<Feed> Input::chooseFeed() {
     else if (feedChoice == "file") {
         return std::make_unique<FileFeed>(fileOfImg);
     }
+    
+    return std::make_unique<FileFeed>(fileOfImg);
 }
