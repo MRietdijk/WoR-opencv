@@ -8,7 +8,7 @@ std::array<int, 6> yellowHSV = {20, 30, 181, 29, 100, 228};
 std::array<int, 6> pinkHSV = {150, 34, 211, 179, 55, 235};
 
 
-Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255})
+Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255}), areaCircle(8000)
 {
 }
 
@@ -77,6 +77,7 @@ void Feed::showSliders() {
     cv::createTrackbar("brightness", windowName, &this->brightness, 100);
     cv::createTrackbar("saturation", windowName, &this->saturation, 100);
     cv::createTrackbar("hue", windowName, &this->hue, 100);
+    cv::createTrackbar("areaCircle", windowName, &this->areaCircle, 15000);
     cv::setTrackbarMin("brightness", windowName, -100);
     cv::setTrackbarMin("saturation", windowName, -100);
     cv::setTrackbarMin("hue", windowName, -100);
@@ -127,6 +128,9 @@ contoursType Feed::getContoursFromShape(Command& cmd, cv::Mat& img, contoursType
     case Shape::CIRCLE:
         result = this->findCircle(colorContours);
         break;
+    case Shape::HALF_CIRCLE:
+        result = this->findHalfCircle(colorContours);
+        break;    
     default:
         result = this->findTriangle(colorContours);
         break;
@@ -199,8 +203,27 @@ contoursType Feed::findCircle(contoursType contours) {
     for (uint8_t i = 0; i < contours.size(); ++i) {
         float peri = cv::arcLength(contours[i], true);
         cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
+        
+        int area = cv::contourArea(contours[i]);
 
-        if (corners[i].size() > 4) {
+        if (corners[i].size() > 4 && area > areaCircle) {
+            result.push_back(contours[i]);
+        }
+    }
+
+    return result;
+}
+
+contoursType Feed::findHalfCircle(contoursType contours) {
+    contoursType corners(contours.size());
+    contoursType result;
+    for (uint8_t i = 0; i < contours.size(); ++i) {
+        float peri = cv::arcLength(contours[i], true);
+        cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
+        
+        int area = cv::contourArea(contours[i]);
+
+        if (corners[i].size() > 4 && area < areaCircle) {
             result.push_back(contours[i]);
         }
     }

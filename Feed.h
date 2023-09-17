@@ -30,6 +30,7 @@ private:
     int brightness;
     int saturation;
     int hue;
+    int areaCircle;
 };
 
 
