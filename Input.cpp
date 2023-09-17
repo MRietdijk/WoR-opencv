@@ -40,8 +40,8 @@ void Input::handleCommand() {
 
 
     std::thread consoleThread(readConsole, std::ref(command), std::ref(quit));
-    feed->showSliders();
 
+    feed->showSliders();
     while (!quit)
     {
         if (command.empty()) {
@@ -56,10 +56,13 @@ void Input::handleCommand() {
         Command command(colorStr, shapeStr);
 
         cv::Mat img = feed->getFeed();
-        cv::imshow("Feed", img);
-        img = feed->processImg(img, true);
+        // cv::imshow("Feed", img);
+        // img = feed->processImg(img, true);
+        contoursType colorContours = feed->getContoursFromColor(command, img, true);
+        
+        contoursType shapeAndColorContours = feed->getContoursFromShape(command, img, colorContours, true);
+        
         cv::waitKey(1);
-
     }
     cv::destroyAllWindows();
 

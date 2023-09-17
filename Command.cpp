@@ -44,3 +44,12 @@ void Command::strToShape(const std::string& shapeStr) {
 
     this->shape = result;
 }
+
+
+Color Command::getColor() const {
+    return this->color;
+}
+
+Shape Command::getShape() const {
+    return this->shape;
+}

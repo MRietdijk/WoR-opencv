@@ -3,3 +3,4 @@ images/
 commands/
 *.o
 .vscode
+values_HSV.txt

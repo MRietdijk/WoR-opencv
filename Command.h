@@ -22,6 +22,8 @@ class Command
 {
 public:
     Command(std::string colorStr, std::string shapeStr);
+    Color getColor() const;
+    Shape getShape() const;
     ~Command();
 private:
     void strToColor(const std::string& colorStr);
