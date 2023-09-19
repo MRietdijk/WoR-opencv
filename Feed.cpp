@@ -8,7 +8,7 @@ std::array<int, 6> yellowHSV = {20, 30, 181, 29, 100, 228};
 std::array<int, 6> pinkHSV = {150, 34, 211, 179, 55, 235};
 
 
-Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255}), areaCircle(8000), ticks(clock())
+Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255}), deviationDistanceCircle(100), ticks(clock())
 {
 }
 
@@ -78,7 +78,13 @@ void Feed::showSliders() {
     cv::createTrackbar("brightness", windowName, &this->brightness, 100);
     cv::createTrackbar("saturation", windowName, &this->saturation, 100);
     cv::createTrackbar("hue", windowName, &this->hue, 100);
-    cv::createTrackbar("areaCircle", windowName, &this->areaCircle, 15000);
+    // cv::createTrackbar("hmin", windowName, &this->HSVValues[0], 179);
+    // cv::createTrackbar("smin", windowName, &this->HSVValues[1], 255);
+    // cv::createTrackbar("vmin", windowName, &this->HSVValues[2], 255);
+    // cv::createTrackbar("hmax", windowName, &this->HSVValues[3], 179);
+    // cv::createTrackbar("smax", windowName, &this->HSVValues[4], 255);
+    // cv::createTrackbar("vmax", windowName, &this->HSVValues[5], 255);
+    cv::createTrackbar("areaCircle", windowName, &this->deviationDistanceCircle, 1000);
     cv::setTrackbarMin("brightness", windowName, -100);
     cv::setTrackbarMin("saturation", windowName, -100);
     cv::setTrackbarMin("hue", windowName, -100);
@@ -204,10 +210,8 @@ contoursType Feed::findCircle(contoursType contours) {
     for (uint8_t i = 0; i < contours.size(); ++i) {
         float peri = cv::arcLength(contours[i], true);
         cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
-        
-        int area = cv::contourArea(contours[i]);
 
-        if (corners[i].size() > 4 && area > areaCircle) {
+        if (corners[i].size() > 4 && !hasLongSide(corners[i], this->deviationDistanceCircle)) {
             result.push_back(contours[i]);
         }
     }
@@ -221,10 +225,8 @@ contoursType Feed::findHalfCircle(contoursType contours) {
     for (uint8_t i = 0; i < contours.size(); ++i) {
         float peri = cv::arcLength(contours[i], true);
         cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
-        
-        int area = cv::contourArea(contours[i]);
 
-        if (corners[i].size() > 4 && area < areaCircle) {
+        if (corners[i].size() > 4 && hasLongSide(corners[i], this->deviationDistanceCircle)) {
             result.push_back(contours[i]);
         }
     }
@@ -266,4 +268,24 @@ void Feed::showFound(cv::Mat img, contoursType contours, bool printing /* = fals
 
 void Feed::setTicks(const clock_t ticks) {
     this->ticks = ticks;
+}
+
+bool Feed::hasLongSide(std::vector<cv::Point>& corners, double deviation) const {
+    std::vector<double> distances(corners.size() - 1);
+    for (uint8_t i = 0; i < corners.size(); ++i) {
+        uint8_t nexti = (i + 1) % corners.size();
+
+        distances.push_back(std::sqrt(std::pow((corners[i].x - corners[nexti].x), 2) + std::pow((corners[i].y - corners[nexti].y), 2)));
+    }
+
+    for (uint8_t i = 0; i < distances.size(); ++i) {
+        uint8_t nexti = (i + 1) % distances.size();
+        double difference = std::abs(distances[i] - distances[nexti]);
+
+        if (difference > deviation) {
+            return true;
+        }
+    }
+
+    return false;
 }

@@ -30,10 +30,11 @@ private:
     contoursType findHalfCircle(contoursType contours);
     contoursType findCircle(contoursType contours);
     contoursType findSquare(contoursType contours, float deviation);
+    bool hasLongSide(std::vector<cv::Point>& corners, double deviation) const;
     int brightness;
     int saturation;
     int hue;
-    int areaCircle;
+    int deviationDistanceCircle;
     clock_t ticks;
 };
 
