@@ -1,5 +1,6 @@
 #include "FileReader.h"
 #include <fstream>
+#include <iostream>
 
 FileReader::FileReader(std::string fileName) {
 
@@ -29,6 +30,7 @@ bool FileReader::hasNextCommand() {
 
 Command FileReader::getNextCommand() {
     Command c = this->commands.front();
+    std::cout << "<<command: " + c.getShapeStr() << " " << c.getColorStr() << ">>" << std::endl;
     this->commands.pop();
     return c;
 }

@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Command::Command(std::string colorStr, std::string shapeStr) {
+Command::Command(std::string colorStr, std::string shapeStr) : colorStr(colorStr), shapeStr(shapeStr) {
     this->strToColor(colorStr);
     this->strToShape(shapeStr);
 }
@@ -52,4 +52,12 @@ Color Command::getColor() const {
 
 Shape Command::getShape() const {
     return this->shape;
+}
+
+std::string Command::getColorStr() const {
+    return this->colorStr;
+}
+    
+std::string Command::getShapeStr() const {
+    return this->shapeStr;
 }

@@ -24,6 +24,8 @@ public:
     Command(std::string colorStr, std::string shapeStr);
     Color getColor() const;
     Shape getShape() const;
+    std::string getColorStr() const;
+    std::string getShapeStr() const;
     ~Command();
 private:
     void strToColor(const std::string& colorStr);
@@ -31,6 +33,8 @@ private:
 
     Color color;
     Shape shape;
+    std::string colorStr;
+    std::string shapeStr;
 };
 
 #endif

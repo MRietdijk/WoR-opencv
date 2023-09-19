@@ -4,6 +4,7 @@
 #include <iostream>
 #include "CameraFeed.h"
 #include "FileFeed.h"
+#include <chrono>
 
 Input::Input(int argc, char *argv[]) : argc(argc), argv(argv) {
 }
@@ -24,11 +25,23 @@ void Input::handleFile() {
 
     FileReader fr(fileOfCmds);
 
+    std::chrono::time_point begin =  std::chrono::steady_clock::now();
+
     while (fr.hasNextCommand())
     {
+        cv::Mat img = feed->getFeed();
+        // give the cam time to start up
+        if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - begin).count() <= 1) {
+            continue;
+        }
+        feed->setTicks(clock());
         Command c = fr.getNextCommand();
+        contoursType colorContours = feed->getContoursFromColor(c, img);
+        contoursType shapeAndColorContours = feed->getContoursFromShape(c, img, colorContours);
+        
+        feed->showFound(img, shapeAndColorContours, true);
     }
-    
+
 }
 
 void Input::handleCommand() {
@@ -56,8 +69,6 @@ void Input::handleCommand() {
         Command command(colorStr, shapeStr);
 
         cv::Mat img = feed->getFeed();
-        // cv::imshow("Feed", img);
-        // img = feed->processImg(img, true);
         contoursType colorContours = feed->getContoursFromColor(command, img, true);
         
         contoursType shapeAndColorContours = feed->getContoursFromShape(command, img, colorContours, true);
