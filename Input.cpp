@@ -29,7 +29,6 @@ void Input::handleFile() {
         Command c = fr.getNextCommand();
     }
     
-
 }
 
 void Input::handleCommand() {
@@ -44,6 +43,7 @@ void Input::handleCommand() {
     feed->showSliders();
     while (!quit)
     {
+        feed->setTicks(clock());
         if (command.empty()) {
             continue;
         }
@@ -62,6 +62,8 @@ void Input::handleCommand() {
         
         contoursType shapeAndColorContours = feed->getContoursFromShape(command, img, colorContours, true);
         
+        feed->showFound(img, shapeAndColorContours);
+
         cv::waitKey(1);
     }
     cv::destroyAllWindows();

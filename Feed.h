@@ -4,6 +4,7 @@
 #include <string>
 #include <opencv2/opencv.hpp>
 #include "Command.h"
+#include <time.h>
 
 typedef std::vector<std::vector<cv::Point>> contoursType;
 
@@ -16,6 +17,8 @@ public:
     contoursType getContoursFromColor(Command& cmd, cv::Mat& img, bool showStepsBetween = false);
     contoursType getContoursFromShape(Command& cmd, cv::Mat& img, contoursType colorContours, bool showStepsBetween = false);
     void showSliders();
+    void showFound(cv::Mat img, contoursType contours);
+    void setTicks(const clock_t ticks);
 protected:
     std::string file;
     std::array<int, 6> HSVValues;
@@ -31,6 +34,7 @@ private:
     int saturation;
     int hue;
     int areaCircle;
+    clock_t ticks;
 };
 
 

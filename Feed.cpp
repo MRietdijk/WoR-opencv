@@ -8,7 +8,7 @@ std::array<int, 6> yellowHSV = {20, 30, 181, 29, 100, 228};
 std::array<int, 6> pinkHSV = {150, 34, 211, 179, 55, 235};
 
 
-Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255}), areaCircle(8000)
+Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255}), areaCircle(8000), ticks(clock())
 {
 }
 
@@ -41,6 +41,7 @@ contoursType Feed::getContours(cv::Mat& imgWithEdges) {
 }
 
 contoursType Feed::getContoursFromColor(Command& cmd, cv::Mat& img, bool showStepsBetween /* = false */) {
+    
     cv::Mat mask, imgHSV, imgBlur, imgErode, imgDilate;
     cv::cvtColor(img, imgHSV, cv::COLOR_BGR2HSV);
     cv::GaussianBlur(imgHSV, imgBlur, cv::Size(7, 7), 3);
@@ -229,4 +230,22 @@ contoursType Feed::findHalfCircle(contoursType contours) {
     }
 
     return result;
+}
+
+void Feed::showFound(cv::Mat img, contoursType contours) {
+    for (uint8_t i = 0; i < contours.size(); ++i) {
+        cv::Rect boundingBox = cv::boundingRect(contours[i]);
+
+        cv::Point middlePoint(boundingBox.x + boundingBox.width / 2, boundingBox.y + boundingBox.height / 2);
+        std::string output = "";
+
+        output += "x: " + std::to_string(middlePoint.x) + " y: " + std::to_string(middlePoint.y) + " time: " + std::to_string(clock() - ticks);
+        cv::putText(img, output, middlePoint, cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 0, 0), 3);
+    }
+
+    cv::imshow("Output", img);
+}
+
+void Feed::setTicks(const clock_t ticks) {
+    this->ticks = ticks;
 }
