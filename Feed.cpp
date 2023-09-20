@@ -2,10 +2,10 @@
 #include <array>
 
 // Custom HSV values
-std::array<int, 6> orangeHSV = {0, 111, 148, 12, 212, 255};
-std::array<int, 6> greenHSV = {67, 115, 90, 81, 180, 196};
-std::array<int, 6> yellowHSV = {20, 30, 181, 29, 100, 228};
-std::array<int, 6> pinkHSV = {150, 34, 211, 179, 55, 235};
+std::array<int, 6> orangeHSV = {0, 141, 148, 43, 242, 255};
+std::array<int, 6> greenHSV = {50, 100, 100, 179, 255, 255};
+std::array<int, 6> yellowHSV = {10, 30, 0, 60, 100, 255};
+std::array<int, 6> pinkHSV = {150, 34, 70, 179, 255, 255};
 
 
 Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255}), deviationDistanceCircle(100), ticks(clock())
@@ -45,7 +45,6 @@ contoursType Feed::getContoursFromColor(Command& cmd, cv::Mat& img, bool showSte
     cv::Mat mask, imgHSV, imgBlur, imgErode, imgDilate;
     cv::cvtColor(img, imgHSV, cv::COLOR_BGR2HSV);
     cv::GaussianBlur(imgHSV, imgBlur, cv::Size(7, 7), 3);
-
     this->setHSVValues(cmd);
 
     cv::Scalar lower(HSVValues[0], HSVValues[1], HSVValues[2]);
@@ -119,7 +118,7 @@ void Feed::setHSVValues(Command& cmd) {
 
 contoursType Feed::getContoursFromShape(Command& cmd, cv::Mat& img, contoursType colorContours, bool showStepsBetween /*= false */) {
     contoursType result;
-    float squareDeviation = 0.5;
+    float squareDeviation = 30;
 
     switch (cmd.getShape())
     {
@@ -194,8 +193,8 @@ contoursType Feed::findRectangle(contoursType contours, float deviation) {
 
         if (corners[i].size() == 4) {
             cv::Rect boundRectangle = cv::boundingRect(corners[i]);
-            float aspRatio = (float)boundRectangle.width / (float)boundRectangle.height;
-            if (aspRatio <  1 - deviation || aspRatio > 1 + deviation) {
+            float aspRatio = std::abs((float)boundRectangle.width - (float)boundRectangle.height);
+            if (aspRatio > deviation) {
                 result.push_back(contours[i]);
             }
         }
