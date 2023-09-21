@@ -6,7 +6,7 @@ const std::array<int, 6> greenHSV = {50, 120, 100, 179, 255, 255};
 const std::array<int, 6> yellowHSV = {10, 0, 0, 60, 160, 255};
 const std::array<int, 6> pinkHSV = {150, 34, 70, 179, 255, 255};
 
-ImageProcessor::ImageProcessor() : HSVValues({0, 0, 0, 255, 255, 255}), deviationDistanceCircle(70), squareDeviation(30), hue(0), saturation(0), value(0) {}
+ImageProcessor::ImageProcessor() : HSVValues({0, 0, 0, 255, 255, 255}), value(0), saturation(0), hue(0), deviationDistanceCircle(70), squareDeviation(30) {}
 
 ImageProcessor::~ImageProcessor() {}
 
@@ -128,7 +128,7 @@ contoursType ImageProcessor::findTriangle(contoursType contours) {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
-        float peri = cv::arcLength(contours[i], true);
+        double peri = cv::arcLength(contours[i], true);
         cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
 
         if (corners[i].size() == 3) {
@@ -143,7 +143,7 @@ contoursType ImageProcessor::findSquare(contoursType contours) {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
-        float peri = cv::arcLength(contours[i], true);
+        double peri = cv::arcLength(contours[i], true);
         cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
 
         if (corners[i].size() == 4) {
@@ -162,7 +162,7 @@ contoursType ImageProcessor::findRectangle(contoursType contours) {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
-        float peri = cv::arcLength(contours[i], true);
+        double peri = cv::arcLength(contours[i], true);
         cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
 
         if (corners[i].size() == 4) {
@@ -181,7 +181,7 @@ contoursType ImageProcessor::findCircle(contoursType contours) {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
-        float peri = cv::arcLength(contours[i], true);
+        double peri = cv::arcLength(contours[i], true);
         cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
 
         if (corners[i].size() > 4 && !hasLongSide(corners[i], this->deviationDistanceCircle)) {
@@ -196,7 +196,7 @@ contoursType ImageProcessor::findHalfCircle(contoursType contours) {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
-        float peri = cv::arcLength(contours[i], true);
+        double peri = cv::arcLength(contours[i], true);
         cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
 
         if (corners[i].size() > 4 && hasLongSide(corners[i], this->deviationDistanceCircle)) {
@@ -210,13 +210,13 @@ contoursType ImageProcessor::findHalfCircle(contoursType contours) {
 bool ImageProcessor::hasLongSide(std::vector<cv::Point>& corners, double deviation) const {
     std::vector<double> distances(corners.size() - 1);
     for (uint8_t i = 0; i < corners.size(); ++i) {
-        uint8_t nexti = (i + 1) % corners.size();
+        std::size_t nexti = (i + 1) % corners.size();
 
         distances.push_back(std::sqrt(std::pow((corners[i].x - corners[nexti].x), 2) + std::pow((corners[i].y - corners[nexti].y), 2)));
     }
 
     for (uint8_t i = 0; i < distances.size(); ++i) {
-        uint8_t nexti = (i + 1) % distances.size();
+        std::size_t nexti = (i + 1) % distances.size();
         double difference = std::abs(distances[i] - distances[nexti]);
 
         if (difference > deviation) {

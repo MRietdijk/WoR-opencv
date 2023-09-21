@@ -1,4 +1,4 @@
-CFLAGS= `pkg-config --cflags opencv4`
+CFLAGS= -Wall -Wextra -Wconversion `pkg-config --cflags opencv4`
 LIBS= `pkg-config --libs opencv4`
 # -Wall -Wextra -Wconversion
 
