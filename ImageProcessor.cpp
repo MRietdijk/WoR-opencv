@@ -1,16 +1,16 @@
 #include "ImageProcessor.h"
 
 // Custom HSV values
-const std::array<int, 6> orangeHSV = {0, 110, 148, 43, 242, 255};
-const std::array<int, 6> greenHSV = {50, 120, 100, 179, 255, 255};
-const std::array<int, 6> yellowHSV = {10, 0, 0, 60, 160, 255};
-const std::array<int, 6> pinkHSV = {150, 34, 70, 179, 255, 255};
+const std::array<int, 6> ORANGE_HSV = {0, 110, 148, 43, 242, 255};
+const std::array<int, 6> GREEN_HSV = {50, 120, 100, 179, 255, 255};
+const std::array<int, 6> YELLOW_HSV = {10, 0, 0, 60, 160, 255};
+const std::array<int, 6> PINK_HSV = {150, 34, 70, 179, 255, 255};
 
 ImageProcessor::ImageProcessor() : HSVValues({0, 0, 0, 255, 255, 255}), value(0), saturation(0), hue(0), deviationDistanceCircle(70), squareDeviation(30) {}
 
 ImageProcessor::~ImageProcessor() {}
 
-contoursType ImageProcessor::getContours(cv::Mat& imgWithEdges) {
+contoursType ImageProcessor::getContours(const cv::Mat& imgWithEdges) const {
     contoursType contours;
     std::vector<cv::Vec4i> hierarchy;
 
@@ -19,7 +19,7 @@ contoursType ImageProcessor::getContours(cv::Mat& imgWithEdges) {
     return contours;
 }
 
-contoursType ImageProcessor::getContoursFromColor(Command& cmd, cv::Mat& img, bool showStepsBetween /* = false */) {
+contoursType ImageProcessor::getContoursFromColor(const Command& cmd, const cv::Mat& img, bool showStepsBetween /* = false */) {
     
     cv::Mat mask, imgHSV, imgBlur, imgErode, imgDilate;
     cv::cvtColor(img, imgHSV, cv::COLOR_BGR2HSV);
@@ -64,23 +64,23 @@ void ImageProcessor::showSliders() {
     cv::setTrackbarMin("hue", windowName, -100);
 }
 
-void ImageProcessor::setHSVValues(Command& cmd) {
+void ImageProcessor::setHSVValues(const Command& cmd) {
     switch (cmd.getColor())
     {
     case Color::PINK:
-        this->HSVValues = pinkHSV;
+        this->HSVValues = PINK_HSV;
         break;
     case Color::GREEN:
-        this->HSVValues = greenHSV;
+        this->HSVValues = GREEN_HSV;
         break;
     case Color::ORANGE:
-        this->HSVValues = orangeHSV;
+        this->HSVValues = ORANGE_HSV;
         break;
     case Color::YELLOW:
-        this->HSVValues = yellowHSV;
+        this->HSVValues = YELLOW_HSV;
         break;
     default:
-        this->HSVValues = orangeHSV;
+        this->HSVValues = ORANGE_HSV;
         break;
     }
     this->HSVValues[0] += this->hue;
@@ -91,7 +91,7 @@ void ImageProcessor::setHSVValues(Command& cmd) {
     this->HSVValues[5] += this->value;
 }
 
-contoursType ImageProcessor::getContoursFromShape(Command& cmd, cv::Mat& img, contoursType colorContours, bool showStepsBetween /*= false */) {
+contoursType ImageProcessor::getContoursFromShape(const Command& cmd, const cv::Mat& img, const contoursType& colorContours, bool showStepsBetween /*= false */) const {
     contoursType result;
 
     switch (cmd.getShape())
@@ -124,7 +124,7 @@ contoursType ImageProcessor::getContoursFromShape(Command& cmd, cv::Mat& img, co
     return result;
 }
 
-contoursType ImageProcessor::findTriangle(contoursType contours) {
+contoursType ImageProcessor::findTriangle(const contoursType& contours) const {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
@@ -139,7 +139,7 @@ contoursType ImageProcessor::findTriangle(contoursType contours) {
     return result;
 }
 
-contoursType ImageProcessor::findSquare(contoursType contours) {
+contoursType ImageProcessor::findSquare(const contoursType& contours) const {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
@@ -158,7 +158,7 @@ contoursType ImageProcessor::findSquare(contoursType contours) {
     return result;
 }
 
-contoursType ImageProcessor::findRectangle(contoursType contours) {
+contoursType ImageProcessor::findRectangle(const contoursType& contours) const {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
@@ -177,7 +177,7 @@ contoursType ImageProcessor::findRectangle(contoursType contours) {
     return result;
 }
 
-contoursType ImageProcessor::findCircle(contoursType contours) {
+contoursType ImageProcessor::findCircle(const contoursType& contours) const {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
@@ -192,7 +192,7 @@ contoursType ImageProcessor::findCircle(contoursType contours) {
     return result;
 }
 
-contoursType ImageProcessor::findHalfCircle(contoursType contours) {
+contoursType ImageProcessor::findHalfCircle(const contoursType& contours) const {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
@@ -207,7 +207,7 @@ contoursType ImageProcessor::findHalfCircle(contoursType contours) {
     return result;
 }
 
-bool ImageProcessor::hasLongSide(std::vector<cv::Point>& corners, double deviation) const {
+bool ImageProcessor::hasLongSide(const std::vector<cv::Point>& corners, double deviation) const {
     std::vector<double> distances(corners.size() - 1);
     for (uint8_t i = 0; i < corners.size(); ++i) {
         std::size_t nexti = (i + 1) % corners.size();

@@ -10,19 +10,19 @@ class ImageProcessor
 {
 public:
     ImageProcessor();
-    contoursType getContoursFromColor(Command& cmd, cv::Mat& img, bool showStepsBetween = false);
-    contoursType getContoursFromShape(Command& cmd, cv::Mat& img, contoursType colorContours, bool showStepsBetween = false);
+    contoursType getContoursFromColor(const Command& cmd, const cv::Mat& img, bool showStepsBetween = false);
+    contoursType getContoursFromShape(const Command& cmd, const cv::Mat& img, const contoursType& colorContours, bool showStepsBetween = false) const;
     void showSliders();
-    contoursType getContours(cv::Mat& imgWithEdges);
-    void setHSVValues(Command& cmd);
+    contoursType getContours(const cv::Mat& imgWithEdges) const;
+    void setHSVValues(const Command& cmd);
     ~ImageProcessor();
 private:
-    contoursType findTriangle(contoursType contours);
-    contoursType findRectangle(contoursType contours);
-    contoursType findHalfCircle(contoursType contours);
-    contoursType findCircle(contoursType contours);
-    contoursType findSquare(contoursType contours);
-    bool hasLongSide(std::vector<cv::Point>& corners, double deviation) const;
+    contoursType findTriangle(const contoursType& contours) const;
+    contoursType findRectangle(const contoursType& contours) const;
+    contoursType findHalfCircle(const contoursType& contours) const;
+    contoursType findCircle(const contoursType& contours) const;
+    contoursType findSquare(const contoursType& contours) const;
+    bool hasLongSide(const std::vector<cv::Point>& corners, double deviation) const;
     
     // attributes
     std::array<int, 6> HSVValues;

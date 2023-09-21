@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 
-FileReader::FileReader(std::string fileName) {
+FileReader::FileReader(const std::string& fileName) {
 
     std::string line;    
     std::ifstream file(fileName);
@@ -24,7 +24,7 @@ FileReader::FileReader(std::string fileName) {
     
 }
 
-bool FileReader::hasNextCommand() {
+bool FileReader::hasNextCommand() const {
     return this->commands.size() > 0;
 }
 

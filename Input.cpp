@@ -20,7 +20,7 @@ void Input::handleInput() {
     }
 }
 
-void Input::handleFile() {
+void Input::handleFile() const {
     std::unique_ptr<Feed> feed = chooseFeed();
     std::string fileOfCmds(argv[3]);
 
@@ -49,7 +49,7 @@ void Input::handleFile() {
 
 }
 
-void Input::handleCommand() {
+void Input::handleCommand() const {
     std::unique_ptr<Feed> feed = chooseFeed();
 
     ImageProcessor imgP;
@@ -108,7 +108,7 @@ void Input::handleCommand() {
     }
 }
 
-std::unique_ptr<Feed> Input::chooseFeed() {
+std::unique_ptr<Feed> Input::chooseFeed() const {
     std::string feedChoice(argv[1]);
     std::string fileOfImg(argv[2]);
 

@@ -8,9 +8,9 @@
 class FileReader
 {
 public:
-    FileReader(std::string fileName);
+    FileReader(const std::string& fileName);
     Command getNextCommand();
-    bool hasNextCommand();
+    bool hasNextCommand() const;
     ~FileReader();
 private:
     std::queue<Command> commands;

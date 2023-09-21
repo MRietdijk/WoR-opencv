@@ -12,7 +12,7 @@ Feed::Feed(std::string file) : file(file), ticks(clock())
 {
 }
 
-void Feed::showFound(cv::Mat img, contoursType contours, bool printing /* = false*/) {
+void Feed::showFound(cv::Mat img, contoursType contours, bool printing /* = false*/) const {
     for (uint8_t i = 0; i < contours.size(); ++i) {
         cv::Rect boundingBox = cv::boundingRect(contours[i]);
 

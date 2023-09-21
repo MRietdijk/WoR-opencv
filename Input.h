@@ -12,9 +12,9 @@ public:
     ~Input();
     void handleInput();
 private:
-    std::unique_ptr<Feed> chooseFeed();
-    void handleFile();
-    void handleCommand();
+    std::unique_ptr<Feed> chooseFeed() const;
+    void handleFile() const;
+    void handleCommand() const;
     static void readConsole(std::string& command, bool& quit);
 
 
