@@ -32,10 +32,5 @@ Input:
 ImageProcessor:
 	g++ -c ImageProcessor.cpp $(CFLAGS) $(LIBS) -o ImageProcessor.o
 
-
-
-preprocessing:
-	g++ preprocessing.cpp $(CFLAGS) $(LIBS) -o main
-
 clean:
 	-rm *.o

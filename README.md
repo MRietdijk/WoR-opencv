@@ -21,3 +21,11 @@ Het commando hierboven vraagt naar een camera die je wilt gebruiken. In mijn gev
 Dus mijn commando zou er als volgt hebben uitgezien:
 
 `./main camera /dev/video1`
+
+Als je een lijst van commando's wilt sturen gebruik het volgende commando:
+
+`./main camera /dev/video1 <het pad naar de lijst met commando's>`
+
+Het commando zou als volgt opgesteld kunnen worden:
+
+`./main camera /dev/video1 ./commands/commands.txt`
