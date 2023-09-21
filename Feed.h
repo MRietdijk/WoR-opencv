@@ -26,15 +26,16 @@ private:
     contoursType getContours(cv::Mat& imgWithEdges);
     void setHSVValues(Command& cmd);
     contoursType findTriangle(contoursType contours);
-    contoursType findRectangle(contoursType contours, float deviation);
+    contoursType findRectangle(contoursType contours);
     contoursType findHalfCircle(contoursType contours);
     contoursType findCircle(contoursType contours);
-    contoursType findSquare(contoursType contours, float deviation);
+    contoursType findSquare(contoursType contours);
     bool hasLongSide(std::vector<cv::Point>& corners, double deviation) const;
     int brightness;
     int saturation;
     int hue;
     int deviationDistanceCircle;
+    float squareDeviation; 
     clock_t ticks;
 };
 

@@ -34,6 +34,7 @@ void Input::handleFile() {
         if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - begin).count() <= 1) {
             continue;
         }
+        begin = std::chrono::steady_clock::now();
         feed->setTicks(clock());
         Command c = fr.getNextCommand();
         contoursType colorContours = feed->getContoursFromColor(c, img);

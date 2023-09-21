@@ -4,11 +4,11 @@
 // Custom HSV values
 std::array<int, 6> orangeHSV = {0, 141, 148, 43, 242, 255};
 std::array<int, 6> greenHSV = {50, 100, 100, 179, 255, 255};
-std::array<int, 6> yellowHSV = {10, 30, 0, 60, 100, 255};
+std::array<int, 6> yellowHSV = {10, 30, 0, 60, 140, 255};
 std::array<int, 6> pinkHSV = {150, 34, 70, 179, 255, 255};
 
 
-Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255}), deviationDistanceCircle(100), ticks(clock())
+Feed::Feed(std::string file) : file(file), brightness(0), HSVValues({0, 0, 0, 255, 255, 255}), deviationDistanceCircle(70), ticks(clock()), squareDeviation(30)
 {
 }
 
@@ -16,7 +16,6 @@ cv::Mat Feed::processImg(cv::Mat& img, bool showStepsBetween /* = false */) {
     cv::Mat imgHSV, imgBlur, imgEdge, result;
     cv::cvtColor(img, imgHSV, cv::COLOR_BGR2HSV);
     cv::GaussianBlur(imgHSV, imgBlur, cv::Size(7, 7), 3);
-    // cv::Canny(imgBlur, imgEdge, this->cannyMin, this->cannyMax);
 
     cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(7, 7));
     cv::dilate(imgEdge, result, kernel);
@@ -118,7 +117,6 @@ void Feed::setHSVValues(Command& cmd) {
 
 contoursType Feed::getContoursFromShape(Command& cmd, cv::Mat& img, contoursType colorContours, bool showStepsBetween /*= false */) {
     contoursType result;
-    float squareDeviation = 30;
 
     switch (cmd.getShape())
     {
@@ -126,10 +124,10 @@ contoursType Feed::getContoursFromShape(Command& cmd, cv::Mat& img, contoursType
         result = this->findTriangle(colorContours);
         break;
     case Shape::SQUARE:
-        result = this->findSquare(colorContours, squareDeviation);
+        result = this->findSquare(colorContours);
         break;
     case Shape::RECTANGLE:
-        result = this->findRectangle(colorContours, squareDeviation);
+        result = this->findRectangle(colorContours);
         break;
     case Shape::CIRCLE:
         result = this->findCircle(colorContours);
@@ -165,26 +163,7 @@ contoursType Feed::findTriangle(contoursType contours) {
     return result;
 }
 
-contoursType Feed::findSquare(contoursType contours, float deviation) {
-    contoursType corners(contours.size());
-    contoursType result;
-    for (uint8_t i = 0; i < contours.size(); ++i) {
-        float peri = cv::arcLength(contours[i], true);
-        cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
-
-        if (corners[i].size() == 4) {
-            cv::Rect boundRectangle = cv::boundingRect(corners[i]);
-            float aspRatio = (float)boundRectangle.width / (float)boundRectangle.height;
-            if (aspRatio >  1 - deviation &&  aspRatio < 1 + deviation) {
-                result.push_back(contours[i]);
-            }
-        }
-    }
-
-    return result;
-}
-
-contoursType Feed::findRectangle(contoursType contours, float deviation) {
+contoursType Feed::findSquare(contoursType contours) {
     contoursType corners(contours.size());
     contoursType result;
     for (uint8_t i = 0; i < contours.size(); ++i) {
@@ -194,7 +173,26 @@ contoursType Feed::findRectangle(contoursType contours, float deviation) {
         if (corners[i].size() == 4) {
             cv::Rect boundRectangle = cv::boundingRect(corners[i]);
             float aspRatio = std::abs((float)boundRectangle.width - (float)boundRectangle.height);
-            if (aspRatio > deviation) {
+            if (aspRatio < this->squareDeviation) {
+                result.push_back(contours[i]);
+            }
+        }
+    }
+
+    return result;
+}
+
+contoursType Feed::findRectangle(contoursType contours) {
+    contoursType corners(contours.size());
+    contoursType result;
+    for (uint8_t i = 0; i < contours.size(); ++i) {
+        float peri = cv::arcLength(contours[i], true);
+        cv::approxPolyDP(contours[i], corners[i], 0.03 * peri, true);
+
+        if (corners[i].size() == 4) {
+            cv::Rect boundRectangle = cv::boundingRect(corners[i]);
+            float aspRatio = std::abs((float)boundRectangle.width - (float)boundRectangle.height);
+            if (aspRatio > this->squareDeviation) {
                 result.push_back(contours[i]);
             }
         }
