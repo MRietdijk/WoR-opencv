@@ -5,6 +5,7 @@
 #include "CameraFeed.h"
 #include "FileFeed.h"
 #include <chrono>
+#include "ImageProcessor.h"
 
 Input::Input(int argc, char *argv[]) : argc(argc), argv(argv) {
 }
@@ -23,24 +24,27 @@ void Input::handleFile() {
     std::unique_ptr<Feed> feed = chooseFeed();
     std::string fileOfCmds(argv[3]);
 
+    ImageProcessor imgP;
+
     FileReader fr(fileOfCmds);
 
     std::chrono::time_point begin =  std::chrono::steady_clock::now();
-
+    const uint16_t DELAY = 1000;
     while (fr.hasNextCommand())
     {
         cv::Mat img = feed->getFeed();
         // give the cam time to start up
-        if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - begin).count() <= 1) {
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() <= DELAY) {
             continue;
         }
         begin = std::chrono::steady_clock::now();
         feed->setTicks(clock());
         Command c = fr.getNextCommand();
-        contoursType colorContours = feed->getContoursFromColor(c, img);
-        contoursType shapeAndColorContours = feed->getContoursFromShape(c, img, colorContours);
+        contoursType colorContours = imgP.getContoursFromColor(c, img);
+        contoursType shapeAndColorContours = imgP.getContoursFromShape(c, img, colorContours, true);
         
         feed->showFound(img, shapeAndColorContours, true);
+        cv::waitKey(DELAY);
     }
 
 }
@@ -48,13 +52,17 @@ void Input::handleFile() {
 void Input::handleCommand() {
     std::unique_ptr<Feed> feed = chooseFeed();
 
+    ImageProcessor imgP;
+    
+
     std::string command;
     bool quit = false;
 
 
     std::thread consoleThread(readConsole, std::ref(command), std::ref(quit));
 
-    feed->showSliders();
+    imgP.showSliders();
+
     while (!quit)
     {
         feed->setTicks(clock());
@@ -70,9 +78,9 @@ void Input::handleCommand() {
         Command command(colorStr, shapeStr);
 
         cv::Mat img = feed->getFeed();
-        contoursType colorContours = feed->getContoursFromColor(command, img, true);
+        contoursType colorContours = imgP.getContoursFromColor(command, img, true);
         
-        contoursType shapeAndColorContours = feed->getContoursFromShape(command, img, colorContours, true);
+        contoursType shapeAndColorContours = imgP.getContoursFromShape(command, img, colorContours, true);
         
         feed->showFound(img, shapeAndColorContours);
 

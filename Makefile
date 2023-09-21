@@ -2,8 +2,8 @@ CFLAGS= `pkg-config --cflags opencv4`
 LIBS= `pkg-config --libs opencv4`
 # -Wall -Wextra -Wconversion
 
-O_FILES= CameraFeed.o FileFeed.o Feed.o Command.o FileReader.o Input.o
-COMMAND_O_FILES= CameraFeed FileFeed Feed Command FileReader Input
+O_FILES= CameraFeed.o FileFeed.o Feed.o Command.o FileReader.o Input.o ImageProcessor.o
+COMMAND_O_FILES= CameraFeed FileFeed Feed Command FileReader Input ImageProcessor
 
 all: main clean
 
@@ -28,6 +28,10 @@ FileReader:
 
 Input:
 	g++ -c Input.cpp $(CFLAGS) $(LIBS) -o Input.o
+
+ImageProcessor:
+	g++ -c ImageProcessor.cpp $(CFLAGS) $(LIBS) -o ImageProcessor.o
+
 
 
 preprocessing:
