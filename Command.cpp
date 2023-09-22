@@ -14,7 +14,7 @@ Command::~Command()
 }
 
 void Command::strToColor(const std::string& colorStr) {
-    Color result;
+    Color result = Color::ORANGE;
 
     if (colorStr == "groen") {
         result = Color::GREEN;
@@ -30,7 +30,7 @@ void Command::strToColor(const std::string& colorStr) {
 }
 
 void Command::strToShape(const std::string& shapeStr) {
-    Shape result;
+    Shape result = Shape::TRIANGLE;
     
     if (shapeStr == "cirkel") {
         result = Shape::CIRCLE;

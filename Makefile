@@ -34,3 +34,6 @@ ImageProcessor:
 
 clean:
 	-rm *.o
+
+cppcheck:
+	cppcheck --language=c++ *.cpp *.h

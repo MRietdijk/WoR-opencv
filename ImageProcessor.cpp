@@ -3,7 +3,7 @@
 // Custom HSV values
 const std::array<int, 6> ORANGE_HSV = {0, 110, 148, 60, 242, 255};
 const std::array<int, 6> GREEN_HSV = {50, 120, 100, 179, 255, 255};
-const std::array<int, 6> YELLOW_HSV = {10, 0, 0, 60, 160, 255};
+const std::array<int, 6> YELLOW_HSV = {10, 0, 0, 40, 160, 255};
 const std::array<int, 6> PINK_HSV = {130, 10, 70, 179, 255, 255};
 
 ImageProcessor::ImageProcessor() : HSVValues({0, 0, 0, 255, 255, 255}), value(0), saturation(0), hue(0), deviationDistanceCircle(90), squareDeviation(30) {}
