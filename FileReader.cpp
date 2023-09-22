@@ -13,10 +13,20 @@ FileReader::FileReader(const std::string& fileName) {
             continue;
         }
 
-        std::string::size_type pos = line.find_last_of(" ");
+        std::string::size_type pos = 0;
+
+        std::string colorStr = "";
+
+        if (line.find_first_of("#") != std::string::npos) {
+            pos = line.find_last_of(" ", line.find_first_of("#") - 1);
+            colorStr = line.substr(pos + 1, line.find_first_of("#") - (pos + 1));
+        } else {
+            pos = line.find_last_of(" ");
+            colorStr = line.substr(pos + 1);
+        }
+
 
         std::string shapeStr = line.substr(0, pos);
-        std::string colorStr = line.substr(pos + 1);
 
         Command c(colorStr, shapeStr);
         this->commands.push(c);
