@@ -21,6 +21,7 @@ void Input::handleInput() {
 }
 
 void Input::handleFile() const {
+    bool quit = false;
     std::unique_ptr<Feed> feed = chooseFeed();
     std::string fileOfCmds(argv[3]);
 
@@ -30,21 +31,25 @@ void Input::handleFile() const {
 
     std::chrono::time_point begin =  std::chrono::steady_clock::now();
     const uint16_t DELAY = 1000;
-    while (fr.hasNextCommand())
+    Command c;
+    c = fr.getNextCommand();
+    while (!quit)
     {
-        cv::Mat img = feed->getFeed();
-        // give the cam time to start up
         if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() <= DELAY) {
+            cv::Mat img = feed->getFeed();
+            feed->setTicks(clock());
+            contoursType colorContours = imgP.getContoursFromColor(c, img);
+            contoursType shapeAndColorContours = imgP.getContoursFromShape(c, img, colorContours, true);
+            feed->showFound(img, shapeAndColorContours, true);
+            cv::waitKey(1);
             continue;
         }
-        begin = std::chrono::steady_clock::now();
-        feed->setTicks(clock());
-        Command c = fr.getNextCommand();
-        contoursType colorContours = imgP.getContoursFromColor(c, img);
-        contoursType shapeAndColorContours = imgP.getContoursFromShape(c, img, colorContours, true);
-        
-        feed->showFound(img, shapeAndColorContours, true);
-        cv::waitKey(DELAY);
+        if (fr.hasNextCommand()) {
+            c = fr.getNextCommand();
+            begin = std::chrono::steady_clock::now();
+        } else {
+            quit = true;
+        }
     }
 
 }

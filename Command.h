@@ -21,6 +21,7 @@ typedef enum {
 class Command
 {
 public:
+    Command();
     Command(std::string colorStr, std::string shapeStr);
     Color getColor() const;
     Shape getShape() const;

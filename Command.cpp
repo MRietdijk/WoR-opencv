@@ -2,6 +2,8 @@
 #include <iostream>
 
 
+Command::Command() : color(Color::ORANGE), shape(Shape::TRIANGLE), colorStr("oranje"), shapeStr("driehoek") {}
+
 Command::Command(std::string colorStr, std::string shapeStr) : colorStr(colorStr), shapeStr(shapeStr) {
     this->strToColor(colorStr);
     this->strToShape(shapeStr);
