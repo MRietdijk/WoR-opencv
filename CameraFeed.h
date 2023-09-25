@@ -7,6 +7,11 @@ class CameraFeed : public Feed
 {
 public:
     CameraFeed(std::string file);
+    /**
+     * @brief gives the next image from camera
+     * 
+     * @return cv::Mat 
+     */
     cv::Mat getFeed();
     virtual ~CameraFeed();
 private:

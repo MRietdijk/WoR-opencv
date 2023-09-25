@@ -98,13 +98,13 @@ void Input::handleCommand() const {
 
 /* static */ void Input::readConsole(std::string& command, bool& quit) {
     std::string userInput = "";
-    while (userInput != "q")
+    while (!quit)
     {
-        std::cout << "Type a command (q to quit):" << std::endl;
+        std::cout << "Type a command (exit to quit):" << std::endl;
 
         std::getline(std::cin, userInput);
 
-        if (userInput == "q") {
+        if (userInput == "exit") {
             quit = true;
             break;
         }
