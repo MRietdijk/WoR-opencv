@@ -70,7 +70,6 @@ void Input::handleCommand() const {
 
     while (!quit)
     {
-        feed->setTicks(clock());
         if (command.empty()) {
             continue;
         }
@@ -83,6 +82,7 @@ void Input::handleCommand() const {
         Command command(colorStr, shapeStr);
 
         cv::Mat img = feed->getFeed();
+        feed->setTicks(clock());
         contoursType colorContours = imgP.getContoursFromColor(command, img, true);
         
         contoursType shapeAndColorContours = imgP.getContoursFromShape(command, img, colorContours, true);
