@@ -36,4 +36,4 @@ clean:
 	-rm *.o
 
 cppcheck:
-	cppcheck --language=c++ *.cpp *.h
+	cppcheck  --enable=all --language=c++ *.cpp *.h

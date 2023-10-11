@@ -8,7 +8,7 @@ std::array<int, 6> yellowHSV = {10, 0, 0, 60, 160, 255};
 std::array<int, 6> pinkHSV = {150, 34, 70, 179, 255, 255};
 
 
-Feed::Feed(std::string file) : file(file), ticks(clock())
+Feed::Feed(const std::string& file) : file(file), ticks(clock())
 {
 }
 

@@ -100,7 +100,7 @@ private:
     int saturation;
     int hue;
     int deviationDistanceCircle;
-    float squareDeviation; 
+    int squareDeviation; 
 };
 
 

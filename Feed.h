@@ -11,7 +11,7 @@ typedef std::vector<std::vector<cv::Point>> contoursType;
 class Feed
 {
 public:
-    Feed(std::string file);
+    Feed(const std::string& file);
     /**
      * @brief Get the Feed object from camera or image
      * 

@@ -6,13 +6,13 @@
 class CameraFeed : public Feed
 {
 public:
-    CameraFeed(std::string file);
+    explicit CameraFeed(std::string file);
     /**
      * @brief gives the next image from camera
      * 
      * @return cv::Mat 
      */
-    cv::Mat getFeed();
+    cv::Mat getFeed() override;
     virtual ~CameraFeed();
 private:
     cv::VideoCapture cap;

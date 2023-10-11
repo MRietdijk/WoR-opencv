@@ -1,6 +1,6 @@
 #include "FileFeed.h"
 
-FileFeed::FileFeed(std::string file) : Feed(file)
+FileFeed::FileFeed(const std::string& file) : Feed(file)
 {
 }
 

@@ -6,13 +6,13 @@
 class FileFeed : public Feed
 {
 public:
-    FileFeed(std::string file);
+    explicit FileFeed(const std::string& file);
     /**
      * @brief Get the Feed from file
      * 
      * @return cv::Mat 
      */
-    cv::Mat getFeed();
+    cv::Mat getFeed() override;
     virtual ~FileFeed();
 private:
 };

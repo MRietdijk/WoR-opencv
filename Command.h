@@ -22,7 +22,7 @@ class Command
 {
 public:
     Command();
-    Command(std::string colorStr, std::string shapeStr);
+    Command(const std::string& colorStr, const std::string& shapeStr);
     /**
      * @brief Get the Color object
      * 

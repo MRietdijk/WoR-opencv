@@ -8,7 +8,7 @@
 class FileReader
 {
 public:
-    FileReader(const std::string& fileName);
+    explicit FileReader(const std::string& fileName);
     /**
      * @brief Get the Next Command in queue
      * 

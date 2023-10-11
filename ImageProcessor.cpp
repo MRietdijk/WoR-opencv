@@ -2,11 +2,11 @@
 
 // Custom HSV values
 const std::array<int, 6> ORANGE_HSV = {0, 110, 148, 60, 242, 255};
-const std::array<int, 6> GREEN_HSV = {50, 120, 100, 179, 255, 255};
-const std::array<int, 6> YELLOW_HSV = {10, 0, 0, 40, 160, 255};
+const std::array<int, 6> GREEN_HSV = {40, 90, 110, 99, 165, 205};
+const std::array<int, 6> YELLOW_HSV = {20, 0, 0, 59, 165, 255};
 const std::array<int, 6> PINK_HSV = {130, 10, 70, 179, 255, 255};
 
-ImageProcessor::ImageProcessor() : HSVValues({0, 0, 0, 255, 255, 255}), value(0), saturation(0), hue(0), deviationDistanceCircle(90), squareDeviation(30) {}
+ImageProcessor::ImageProcessor() : HSVValues({0, 0, 0, 255, 255, 255}), value(0), saturation(0), hue(0), deviationDistanceCircle(60), squareDeviation(10) {}
 
 ImageProcessor::~ImageProcessor() {}
 
@@ -59,6 +59,7 @@ void ImageProcessor::showSliders() {
     // cv::createTrackbar("smax", windowName, &this->HSVValues[4], 255);
     // cv::createTrackbar("vmax", windowName, &this->HSVValues[5], 255);
     cv::createTrackbar("areaCircle", windowName, &this->deviationDistanceCircle, 1000);
+    cv::createTrackbar("squareDeviation", windowName, &this->squareDeviation, 100);
     cv::setTrackbarMin("brightness", windowName, -100);
     cv::setTrackbarMin("saturation", windowName, -100);
     cv::setTrackbarMin("hue", windowName, -100);
@@ -168,7 +169,7 @@ contoursType ImageProcessor::findRectangle(const contoursType& contours) const {
         if (corners[i].size() == 4) {
             cv::Rect boundRectangle = cv::boundingRect(corners[i]);
             float aspRatio = std::abs((float)boundRectangle.width - (float)boundRectangle.height);
-            if (aspRatio > this->squareDeviation) {
+            if (aspRatio > (double)this->squareDeviation) {
                 result.push_back(contours[i]);
             }
         }

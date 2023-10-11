@@ -79,13 +79,13 @@ void Input::handleCommand() const {
         std::string shapeStr = command.substr(0, pos);
         std::string colorStr = command.substr(pos + 1);
 
-        Command command(colorStr, shapeStr);
+        Command commandObj(colorStr, shapeStr);
 
         cv::Mat img = feed->getFeed();
         feed->setTicks(clock());
-        contoursType colorContours = imgP.getContoursFromColor(command, img, true);
+        contoursType colorContours = imgP.getContoursFromColor(commandObj, img, true);
         
-        contoursType shapeAndColorContours = imgP.getContoursFromShape(command, img, colorContours, true);
+        contoursType shapeAndColorContours = imgP.getContoursFromShape(commandObj, img, colorContours, true);
         
         feed->showFound(img, shapeAndColorContours);
 
